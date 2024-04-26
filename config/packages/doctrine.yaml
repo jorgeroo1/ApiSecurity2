@@ -20,6 +20,7 @@ when@test:
     doctrine:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
+            # esto significa que para nuestra base de datos de pruebas se llama ApiSecurity_test
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
 when@prod:

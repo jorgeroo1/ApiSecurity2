@@ -34,9 +34,14 @@ use function Symfony\Component\String\u;
             ],
         ),
         new GetCollection(),
-        new Post(),
+        new Post(
+            //solo se podrá crear si tiene el rol treasure create
+            security: 'is_granted("ROLE_TREASURE_CREATE")',
+        ),
         new Put(),
-        new Patch(),
+        new Patch(
+            security: 'is_granted("ROLE_TREASURE_EDIT")',
+        ),
     ],
     formats: [
         'jsonld',
