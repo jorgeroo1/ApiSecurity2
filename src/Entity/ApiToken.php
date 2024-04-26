@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\ApiTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Random\RandomException;
 
 #[ORM\Entity(repositoryClass: ApiTokenRepository::class)]
 class ApiToken
@@ -36,9 +35,7 @@ class ApiToken
     #[ORM\Column]
     private array $scopes = [];
 
-    /**
-     * @throws RandomException
-     */
+
     public function __construct(string $tokenType = self::PERSONAL_ACCESS_TOKEN_PREFIX)
     {
         //crear una cadena de 64 caracteres de manera aleatoria + el personal que son 4

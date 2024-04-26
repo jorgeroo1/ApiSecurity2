@@ -23,6 +23,7 @@ class ApiTokenHandler implements AccessTokenHandlerInterface
         if (!$token->isValid()){
             throw new BadCredentialsException();
         }
+        $token->getOwnedBy()->markAsTokenAuthenticated($token->getScopes());
         //estamos devolviendo un UserBadge porque está interfaz nos lo exige y el primer metodo
         // me devuelve un objeto User y el segundo el email
         return new UserBadge($token->getOwnedBy()->getUserIdentifier());
