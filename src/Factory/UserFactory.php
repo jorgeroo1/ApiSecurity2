@@ -52,6 +52,15 @@ final class UserFactory extends ModelFactory
         parent::__construct();
     }
 
+    public function withRoles(array $roles): self
+    {
+        return $this->addState(['roles' => $roles]);
+    }
+    //la funcion withRoles añade un rol, en este caso hemos añadido el rol ADMIN
+    public function asAdmin(): self
+    {
+        return $this->withRoles(['ROLE_ADMIN']);
+    }
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *

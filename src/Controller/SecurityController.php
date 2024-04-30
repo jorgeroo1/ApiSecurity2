@@ -17,11 +17,11 @@ class SecurityController extends AbstractController
         //si no está el if y no enviemos el context-type en la cabecera de la peticion en la pestaña no aparecera
         //ningun mensaje
     public function login(IriConverterInterface $iriConverter,#[CurrentUser] User $user = null):Response{
-        if (!$user){
-            return $this->json([
-                'error' => 'Invalid login request: check that Content-Type',
-            ], 401);
-        }
+//        if (!$user){
+//            return $this->json([
+//                'error' => 'Invalid login request: check that Content-Type',
+//            ], 401);
+//        }
         //todo ha salido bien pero no hay contenido que devolver, ese es el codigo 204
         //el iri era la url que obtenemos al hacer la peticion
         //por ejemplo /api/users/5 eso seria un ejemplo de iri

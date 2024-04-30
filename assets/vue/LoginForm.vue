@@ -54,6 +54,7 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 const isLoading = ref(false);
+//esto significa que la constante emit puede "generar" un evento llamado user-authenticated
 const emit = defineEmits(['user-authenticated']);
 
 const loadEmailField = () => {

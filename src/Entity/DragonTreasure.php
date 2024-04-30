@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -15,6 +16,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\DragonTreasureRepository;
+use App\Validator\Owner;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,9 +40,18 @@ use function Symfony\Component\String\u;
             //solo se podrá crear si tiene el rol treasure create
             security: 'is_granted("ROLE_TREASURE_CREATE")',
         ),
-        new Put(),
         new Patch(
-            security: 'is_granted("ROLE_TREASURE_EDIT")',
+        //solo se podrá crear si tiene el rol treasure edit y accedemos al metodo getOwner del tesoro que es de tipo User
+        //para comprobar si el usuario registrado (actual) es el dueño del tesoro no podemos acceder a owner porque es una
+        //propiedad privada
+//            security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_TREASURE_EDIT") and object.getOwner() == user',
+
+        //utilizamos esta sintaxis porque estamos usando un Voter para manejar la seguridad de la entidad DragonTreasure
+        //se llama a la funcion supports del Voter, al final lo que te devuelve is_granted es un true o false para saber
+        //si tienes permisos
+        security: 'is_granted("EDIT", object)',
+//        securityPostDenormalize: 'is_granted("EDIT", object)',
+//            securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getOwner() == user',
         ),
     ],
     formats: [
@@ -116,6 +127,9 @@ class DragonTreasure
 
     #[ORM\Column]
     #[ApiFilter(BooleanFilter::class)]
+    //si esto devuelve false esta variable no se incluiria en la API no se podrá leer ni escribir
+    #[ApiProperty(security: 'is_granted("EDIT", object)')]
+    #[Groups(['owner:read', 'treasure:item:get', 'admin:write'])]
     private bool $isPublished = false;
 
     #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
@@ -123,6 +137,9 @@ class DragonTreasure
     #[Groups(['treasure:read', 'treasure:write'])]
     #[Assert\Valid]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+//    #[Assert\NotNull]
+    //llamara a OwnerValidator, el value es de tipo User
+    #[Owner]
     private ?User $owner = null;
 
     public function __construct(string $name = null)
