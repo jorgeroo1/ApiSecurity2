@@ -26,7 +26,6 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface,SerializerAwareInt
     }
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
-        // TODO: Implement supportsNormalization() method.
 
         return $this->normalizer->supportsNormalization($data, $format);
     }
@@ -36,6 +35,5 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface,SerializerAwareInt
         if ($this->normalizer instanceof SerializerAwareInterface) {
             $this->normalizer->setSerializer($serializer);
         }
-        // TODO: Implement setSerializer() method.
     }
 }
